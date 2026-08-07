@@ -84,4 +84,95 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
+const readlineSync = require('readline-sync');
+const students = [];
+
+function displayMenu() {
+  console.log('================================');
+  console.log('   STUDENT RECORD SYSTEM MENU');
+  console.log('================================');
+  console.log('1. Add student');
+  console.log('2. Display all students');
+  console.log('3. Calculate average score');
+  console.log('4. Quit');
+  return readlineSync.questionInt('Enter your choice (1-4): ');
+}
+
+function addStudent(records) {
+  const name = readlineSync.question('Student name: ');
+  const id = readlineSync.questionInt('Student ID: ');
+  const scoreCount = readlineSync.questionInt('How many scores? ');
+
+  if (scoreCount <= 0) {
+    console.log('Error: Score count must be a positive number.');
+    return;
+  }
+
+  const scores = [];
+  for (let i = 1; i <= scoreCount; i++) {
+    const score = readlineSync.questionInt(`Enter score ${i}: `);
+    scores.push(score);
+  }
+
+  records.push({ name, id, scores });
+  console.log(`Student "${name}" added successfully.`);
+}
+
+function displayStudents(records) {
+  if (records.length === 0) {
+    console.log('No students have been added yet.');
+    return;
+  }
+
+  console.log('Student Records:');
+  for (const student of records) {
+    const average = student.scores.reduce((sum, value) => sum + value, 0) / student.scores.length;
+    console.log(`Name: ${student.name}`);
+    console.log(`ID: ${student.id}`);
+    console.log(`Scores: ${student.scores.join(', ')}`);
+    console.log(`Average: ${average.toFixed(2)}`);
+    console.log('------------------------------');
+  }
+}
+
+function calculateAverageScore(records) {
+  const id = readlineSync.questionInt('Enter student ID: ');
+  const student = records.find((record) => record.id === id);
+
+  if (!student) {
+    console.log('Error: Student ID not found.');
+    return;
+  }
+
+  const average = student.scores.reduce((sum, value) => sum + value, 0) / student.scores.length;
+  console.log(`${student.name}'s average score: ${average.toFixed(2)}`);
+}
+
+function main() {
+  while (true) {
+    const choice = displayMenu();
+
+    switch (choice) {
+      case 1:
+        addStudent(students);
+        break;
+      case 2:
+        displayStudents(students);
+        break;
+      case 3:
+        calculateAverageScore(students);
+        break;
+      case 4:
+        console.log('Goodbye!');
+        return;
+      default:
+        console.log('Error: Please enter a valid choice between 1 and 4.');
+    }
+
+    console.log('');
+  }
+}
+
+main();
+
 

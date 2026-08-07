@@ -81,4 +81,81 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
+const readlineSync = require('readline-sync');
+const tasks = [];
+
+function displayMenu() {
+  console.log('============================');
+  console.log('     TO-DO LIST MENU');
+  console.log('============================');
+  console.log('1. Add task');
+  console.log('2. View tasks');
+  console.log('3. Delete task');
+  console.log('4. Quit');
+  return readlineSync.questionInt('Enter your choice (1-4): ');
+}
+
+function addTask(tasksArray) {
+  const taskDescription = readlineSync.question('Enter task: ');
+  tasksArray.push(taskDescription);
+  console.log(`Task added: "${taskDescription}"`);
+}
+
+function viewTasks(tasksArray) {
+  if (tasksArray.length === 0) {
+    console.log('No tasks found. Your to-do list is empty.');
+    return;
+  }
+
+  console.log('Your Tasks:');
+  for (let i = 0; i < tasksArray.length; i++) {
+    console.log(`${i + 1}. ${tasksArray[i]}`);
+  }
+}
+
+function deleteTask(tasksArray) {
+  if (tasksArray.length === 0) {
+    console.log('No tasks to delete. Your to-do list is empty.');
+    return;
+  }
+
+  viewTasks(tasksArray);
+  const taskNumber = readlineSync.questionInt('Enter task number to delete: ');
+
+  if (taskNumber < 1 || taskNumber > tasksArray.length) {
+    console.log('Error: Invalid task number.');
+    return;
+  }
+
+  const removedTask = tasksArray.splice(taskNumber - 1, 1)[0];
+  console.log(`Task "${removedTask}" has been removed.`);
+}
+
+function main() {
+  while (true) {
+    const choice = displayMenu();
+
+    switch (choice) {
+      case 1:
+        addTask(tasks);
+        break;
+      case 2:
+        viewTasks(tasks);
+        break;
+      case 3:
+        deleteTask(tasks);
+        break;
+      case 4:
+        console.log('Goodbye!');
+        return;
+      default:
+        console.log('Error: Please enter a choice between 1 and 4.');
+    }
+
+    console.log('');
+  }
+}
+
+main();
+
 
